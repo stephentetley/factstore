@@ -93,5 +93,14 @@ namespace Factstore/Internal/Factstore {
             case _: ##java.sql.SQLException => Err(Generic("Factstore.prepareStatement"))
         }
 
+    pub def execute(x: Factstore, sql: String): Result[Bool, System.Error] & Impure =
+        import flix.runtime.spt.factstore.Factstore.execute(String);
+        try {
+            let Factstore(x1) = x;
+            let ans = x1.execute(sql);
+            Ok(ans)
+        } catch {
+            case _: ##java.sql.SQLException => Err(Generic("Factstore.execute"))
+        }
 
 }

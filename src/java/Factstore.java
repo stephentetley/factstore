@@ -17,10 +17,7 @@
 package flix.runtime.spt.factstore;
 
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Factstore {
 
@@ -50,5 +47,10 @@ public class Factstore {
         return conn.prepareStatement(sql);
     }
 
+    /// For CREATE TABLE etc. statements...
+    public boolean execute(String sql) throws SQLException {
+        Statement stmt = conn.createStatement();
+        return stmt.execute(sql);
+    }
 
 }
