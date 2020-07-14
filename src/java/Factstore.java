@@ -19,6 +19,7 @@ package flix.runtime.spt.factstore;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Factstore {
@@ -32,4 +33,22 @@ public class Factstore {
     public void close() throws SQLException {
         conn.close();
     }
+
+    public void setAutoCommit(boolean autoCommit) throws SQLException {
+        conn.setAutoCommit(autoCommit);
+    }
+
+    public void commit() throws SQLException {
+        conn.commit();
+    }
+
+    public void rollback() throws SQLException {
+        conn.rollback();
+    }
+
+    public PreparedStatement prepareStatement(String sql) throws SQLException {
+        return conn.prepareStatement(sql);
+    }
+
+
 }

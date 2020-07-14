@@ -26,7 +26,7 @@ namespace Factstore/Internal {
 
 namespace Factstore/Internal/PreparedStatement {
 
-    pub def setString(x: PreparedStatement, ix: Int32, str: String): Result[Unit, System.Error] & Impure =
+    pub def setString!(x: PreparedStatement, ix: Int32, str: String): Result[Unit, System.Error] & Impure =
         import java.sql.PreparedStatement.setString(Int32, String);
         try {
             let PreparedStatement(x1) = x;
@@ -36,7 +36,7 @@ namespace Factstore/Internal/PreparedStatement {
             case _: ##java.sql.SQLException => Err(Generic("SQLException"))
         }
 
-    pub def setBool(x: PreparedStatement, ix: Int32, b: Bool): Result[Unit, System.Error] & Impure =
+    pub def setBool!(x: PreparedStatement, ix: Int32, b: Bool): Result[Unit, System.Error] & Impure =
         import java.sql.PreparedStatement.setBoolean(Int32, Bool);
         try {
             let PreparedStatement(x1) = x;
@@ -46,7 +46,7 @@ namespace Factstore/Internal/PreparedStatement {
             case _: ##java.sql.SQLException => Err(Generic("SQLException"))
         }
 
-    pub def setInt8(x: PreparedStatement, ix: Int32, n: Int8): Result[Unit, System.Error] & Impure =
+    pub def setInt8!(x: PreparedStatement, ix: Int32, n: Int8): Result[Unit, System.Error] & Impure =
         import java.sql.PreparedStatement.setByte(Int32, Int8);
         try {
             let PreparedStatement(x1) = x;
@@ -56,7 +56,7 @@ namespace Factstore/Internal/PreparedStatement {
             case _: ##java.sql.SQLException => Err(Generic("SQLException"))
         }
 
-    pub def setInt16(x: PreparedStatement, ix: Int32, n: Int16): Result[Unit, System.Error] & Impure =
+    pub def setInt16!(x: PreparedStatement, ix: Int32, n: Int16): Result[Unit, System.Error] & Impure =
         import java.sql.PreparedStatement.setShort(Int32, Int16);
         try {
             let PreparedStatement(x1) = x;
@@ -66,7 +66,7 @@ namespace Factstore/Internal/PreparedStatement {
             case _: ##java.sql.SQLException => Err(Generic("SQLException"))
         }
 
-    pub def setInt32(x: PreparedStatement, ix: Int32, n: Int32): Result[Unit, System.Error] & Impure =
+    pub def setInt32!(x: PreparedStatement, ix: Int32, n: Int32): Result[Unit, System.Error] & Impure =
         import java.sql.PreparedStatement.setInt(Int32, Int32);
         try {
             let PreparedStatement(x1) = x;
@@ -76,7 +76,7 @@ namespace Factstore/Internal/PreparedStatement {
             case _: ##java.sql.SQLException => Err(Generic("SQLException"))
         }
 
-    pub def setInt64(x: PreparedStatement, ix: Int32, n: Int64): Result[Unit, System.Error] & Impure =
+    pub def setInt64!(x: PreparedStatement, ix: Int32, n: Int64): Result[Unit, System.Error] & Impure =
         import java.sql.PreparedStatement.setLong(Int32, Int64);
         try {
             let PreparedStatement(x1) = x;
@@ -86,7 +86,7 @@ namespace Factstore/Internal/PreparedStatement {
             case _: ##java.sql.SQLException => Err(Generic("SQLException"))
         }
 
-    pub def setFloat32(x: PreparedStatement, ix: Int32, d: Float32): Result[Unit, System.Error] & Impure =
+    pub def setFloat32!(x: PreparedStatement, ix: Int32, d: Float32): Result[Unit, System.Error] & Impure =
         import java.sql.PreparedStatement.setFloat(Int32, Float32);
         try {
             let PreparedStatement(x1) = x;
@@ -96,7 +96,7 @@ namespace Factstore/Internal/PreparedStatement {
             case _: ##java.sql.SQLException => Err(Generic("SQLException"))
         }
 
-    pub def setFloat64(x: PreparedStatement, ix: Int32, d: Float64): Result[Unit, System.Error] & Impure =
+    pub def setFloat64!(x: PreparedStatement, ix: Int32, d: Float64): Result[Unit, System.Error] & Impure =
         import java.sql.PreparedStatement.setDouble(Int32, Float64);
         try {
             let PreparedStatement(x1) = x;
@@ -105,6 +105,6 @@ namespace Factstore/Internal/PreparedStatement {
         } catch {
             case _: ##java.sql.SQLException => Err(Generic("SQLException"))
         }
-        
+
 }
 
