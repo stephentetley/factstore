@@ -106,5 +106,17 @@ namespace Factstore/Internal/PreparedStatement {
             case _: ##java.sql.SQLException => Err(Generic("SQLException"))
         }
 
+
+    pub def executeUpdate(x: PreparedStatement): Result[Int32, System.Error] & Impure =
+        import java.sql.PreparedStatement.executeUpdate();
+        try {
+            let PreparedStatement(x1) = x;
+            let ans = x1.executeUpdate();
+            Ok(ans)
+        } catch {
+            case _: ##java.sql.SQLException => Err(Generic("PreparedStatement.executeUpdate"))
+        }
+
+
 }
 
