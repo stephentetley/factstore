@@ -26,6 +26,16 @@ namespace Factstore/Internal {
 
 namespace Factstore/Internal/PreparedStatement {
 
+    pub def clearParameters!(x: PreparedStatement): Result[Unit, System.Error] & Impure =
+        import java.sql.PreparedStatement.clearParameters();
+        try {
+            let PreparedStatement(x1) = x;
+            x1.clearParameters();
+            Ok()
+        } catch {
+            case _: ##java.sql.SQLException => Err(Generic("SQLException.clearParameters"))
+        }
+
     pub def setString!(x: PreparedStatement, ix: Int32, str: String): Result[Unit, System.Error] & Impure =
         import java.sql.PreparedStatement.setString(Int32, String);
         try {

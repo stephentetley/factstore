@@ -1,5 +1,6 @@
-use Factstore/Export.{makeConnectString};
-use Factstore/Internal.Factstore;
+use Factstore.SQLiteExport;
+use Factstore.RowWriter;
+use Factstore/Export.{runSQLiteExport};
 
 pub def apply_(funs: List[a -> Result[Unit, e] & ef] , x: a): Result[Unit, e] & ef = match funs { 
     case fn :: rs => match fn(x) {
@@ -11,42 +12,41 @@ pub def apply_(funs: List[a -> Result[Unit, e] & ef] , x: a): Result[Unit, e] & 
 
 rel Dbms(name: String, year: Int32)
 
-def relns(): #{Dbms} = #{
+def databases(): #{Dbms} = #{
     Dbms("PostgreSQL", 1996).
     Dbms("SQLite", 2000).
     Dbms("DuckDB", 2019).
 }
 
-def setup(filepath: String): Result[Factstore, System.Error] & Impure =
-    use Result.flatMap;
-    use Factstore/Internal/Factstore.{new, execute};
-    let path = System/FilePath.new(filepath);
-    let* _ = System/File.deleteIfExists(path);
-    let url = makeConnectString(filepath);
-    let* db = new(url);
-    let sql = "CREATE TABLE IF NOT EXISTS dbms (name text PRIMARY KEY NOT NULL, year int);";
-    let* _ = db.execute(sql);
-    Ok(db)
+def writeOutput(): SQLiteExport[Unit] =
+    use Factstore/Export.{flatMap, return, execute, emptySQLiteWriteList, execWriteList, setAutoCommit, commit, close};
+    let* _          = execute("CREATE TABLE IF NOT EXISTS dbms (name text PRIMARY KEY NOT NULL, year int);");
+    let* _          = execute("DELETE FROM dbms;");
+    let stmt        = "INSERT INTO dbms(name,capacity) VALUES(?,?)";
+    let* _          = setAutoCommit(false);
+    let writeStep   = Factstore/Export.makeSQLiteWriteStep(writeCells);
+    let writes      = { fold Dbms (emptySQLiteWriteList()) writeStep databases() };
+    let* _          = execWriteList(stmt, writes);
+    let* _          = commit();
+    let* _          = close();
+    return()
 
-def relfoldM(): Result[Unit, System.Error] & Impure = 
-    let step = (x, ac) -> {
-        let fn = () -> { 
-            let (name, year) = x;
-            Console.printLine(name + " " + Int32.toString(year));
-            Ok()
-        };
-        List.append(ac, (fn :: Nil))
-    };
-    let funs = fold Dbms Nil step (solve relns());
-    apply_(funs, ())
+
+/// A "cell printer" for the body of Dbms.
+def writeCells(src: (String,Int)): RowWriter[Unit] = 
+    use Factstore/RowWriter.{flatMap, return, tellString!, tellInt32!};
+    let (name,year) = src;
+    let* _ = tellString!(0, name);
+    let* _ = tellInt32!(0, year);
+    return()
+
 
 def main(): Result[Bool, System.Error] & Impure =
     use Result.flatMap;
-    use Factstore/Internal/Factstore.{execute, close};
     let str = "e:/coding/flix/factstore/output/db1.sqlite";
-    let* db = setup(str);
-    let* _ = relfoldM();
-    let* _ = db.close();
+    let path = System/FilePath.new(str);
+    let* _ = System/File.deleteIfExists(path);
+    let* _ = runSQLiteExport(writeOutput(), path);
     Ok(true)
 
 
